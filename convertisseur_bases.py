@@ -42,7 +42,7 @@ def init():
                 try:
                     int(num, 2)
                 except:
-                    print('Veuillez entrer un nombre bianire!\n')
+                    print('Veuillez entrer un nombre binaire!\n')
                     continue
             elif bases[0] == 'hex':
                 try:

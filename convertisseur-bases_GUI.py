@@ -7,7 +7,7 @@ def init():
     window = tk.Tk()
     width = 1000
     height = 600
-    window.title('Convertisseur de bases - V1.0')
+    window.title('Convertisseur de bases - V1.0 by Kais')
     screenwidth = window.winfo_screenwidth()
     screenheight = window.winfo_screenheight()
     alignstr = '%dx%d+%d+%d' % (width, height, (screenwidth - width) / 2, (screenheight - height) / 2)
@@ -55,7 +55,7 @@ def init():
     bg="#f55142",
     fg="white",
     font  = ('', 15),
-    command = conversion
+    command = verif
     )
     nombre_titre = tk.Label(
         text="Nombre:",
@@ -87,58 +87,57 @@ def init():
     résultat.place(x= -700, y=380)
     bouton_convertir.place(x=420,y=190,width=115,height=51)
     window.mainloop()
-    # while True: 
-    #     inp = input('\nConversion base1 base2 (hex, dec, oct, bin): ').lower()
-    #     try:
-    #         bases = re.search('(bin|dec|hex|oct).*(bin|dec|hex|oct)', inp).groups()
-    #         break
-    #     except:
-    #         print('Erreur, veuillez saisir dans le bon format (base1 base2)\n')
-    #         continue
-    # while True:
-    #     try:
-    #         signe = False
-    #         num = input('\n(ctrl+c pour modifier les bases) Nombre à convertir: ')
-    #         if bases[0] == 'dec':
-    #             if num.isnumeric():
-    #                 pass
-    #             elif re.search('^-\d+$', num):
-    #                 signe = True
-    #                 pass
-    #             else:
-    #                 print('Erreur, veuillez saisir un decimal!\n')
-    #                 continue
-    #         elif bases[0] == 'bin':
-    #             try:
-    #                 int(num, 2)
-    #             except:
-    #                 print('Veuillez entrer un nombre bianire!\n')
-    #                 continue
-    #         elif bases[0] == 'hex':
-    #             try:
-    #                 int(num, 16)
-    #                 pass
-    #             except:
-    #                 print('Veuillez entrer un nombre en hexadecimal!\n')
-    #                 continue
-    #         elif bases[0] == 'oct':
-    #             try:
-    #                 int(num, 8)
-    #                 pass
-    #             except:
-    #                 print('Veuillez entrer un nombre en octal!\n')
-    #                 continue
-    #         print(conversion(bases[0], bases[1], num, signe))
-    #     except KeyboardInterrupt:
-    #         init() 
 
-def conversion():
-    b1 = base1.get()
-    b2 = base2.get()
-    num = nombre.get()
-    if num[0] == '-':
-        signe = True
-    else: signe = False 
+def verif():
+    b1 = base1.get().strip()
+    b2 = base2.get().strip()
+    num = nombre.get().strip()
+    signe = False
+    if re.search('.*(bin|dec|hex|oct).*', b1) and re.search('.*(bin|dec|hex|oct).*', b2):
+        pass
+    else: result = 'Erreur, veuillez saisir dans le bon format (base1 base2)'
+
+    if b1 == 'dec':
+        if num.isnumeric():
+            conversion(b1, b2, num, signe)
+        elif re.search('^-\d+$', num):
+            signe = True
+            conversion(b1, b2, num, signe)
+        else:
+            result = 'Erreur, veuillez saisir un decimal!'
+    elif b1 == 'bin':
+        try:
+            int(num, 2)
+            conversion(b1, b2, num, signe)
+        except:
+            result = 'Veuillez entrer un nombre binaire!'
+    elif b1 == 'hex':
+        try:
+            int(num, 16)
+            conversion(b1, b2, num, signe)
+        except:
+            result = 'Veuillez entrer un nombre en hexadecimal!'
+    elif b1 == 'oct':
+        try:
+            int(num, 8)
+            conversion(b1, b2, num, signe)
+        except:
+            result = 'Veuillez entrer un nombre en octal!'
+    else: result = 'Veuillez entrer une base valide!'
+    try:
+        résultat = tk.Label(
+            text=f"Résultat: \n{result}",
+            height= 10,
+            width= 200,
+            fg= '#f55142',
+            font = ('',15),
+            justify= 'center' 
+        )
+        résultat.place(x= -700, y=380)
+    except:
+        pass
+
+def conversion(b1, b2, num, signe):
     if b2 == 'dec':
         if b1 == 'hex':
             result = (int(num, 16))
@@ -191,6 +190,7 @@ def conversion():
             result = (bin(int(num, 16))[2:])
         else:
             result = (num)
+    else: result = 'Veuillez entrer une base valide!'
     résultat = tk.Label(
         text=f"Résultat: \n{result}",
         height= 10,
