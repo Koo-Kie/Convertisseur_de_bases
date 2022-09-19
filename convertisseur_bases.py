@@ -69,8 +69,7 @@ def conversion(b1, b2, num, signe):
         elif b1 == 'oct':
             return (int(num, 8))
         elif b1 == 'bin':
-            if len(num) == 8 or len(num) == 16:
-                print('good')
+            if len(num)%8 == 0:
                 résultat = ''
                 for bit in (bin(int(str(num),2)-1)[2:]):
                     if bit == '0':
@@ -103,7 +102,11 @@ def conversion(b1, b2, num, signe):
     elif b2 == 'bin':
         if b1 == 'dec':
             if signe == True:
-                return f'Complément à deux (1 octet): {bin(int(num) & 0xff)[2:]} \nComplément à deux (2 octets): {bin(int(num) & 0xfff)[2:]}'
+                nb_byte = (int(num).bit_length() + 7) // 8
+                if nb_byte >=2:
+                    lettre = 's'
+                else: lettre = ''
+                return f'Complément à deux ({nb_byte} octet{lettre}): {bin(int(num) & (2**(nb_byte*8) - 1))[2:]}'   
             else:
                 return (bin(int(num))[2:])
         elif b1 == 'oct':

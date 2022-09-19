@@ -69,10 +69,10 @@ def init():
     justify= 'center'
     )
     résultat = tk.Label(
-        text=f"Résultat: {result}",
-        height= 150,
-        width = 950,
-        justify= 'left',
+        text=f"Résultat: \n{result}",
+        height= 10,
+        width = 200,
+        justify= 'center',
         fg= '#f55142',
         font = ('',15) 
     )  
@@ -84,7 +84,7 @@ def init():
     base2.place(x=640,y=190,width=155,height=50)
     nombre_titre.place(x=440,y=280,width=80,height=25)
     nombre.place(x=420,y=320,width=109,height=44)
-    résultat.place(x= 40, y=400)
+    résultat.place(x= -700, y=380)
     bouton_convertir.place(x=420,y=190,width=115,height=51)
     window.mainloop()
     # while True: 
@@ -145,21 +145,21 @@ def conversion():
         elif b1 == 'oct':
             result = (int(num, 8))
         elif b1 == 'bin':
-            if len(num) == 8 or len(num) == 16:
+            if len(num)%8 == 0:
                 résultat = ''
                 for bit in (bin(int(str(num),2)-1)[2:]):
                     if bit == '0':
                         résultat += '1'
                     else:
                         résultat += '0'
-                result = (f'Décimal: {int(num, 2)} \nComplément à deux: -{int(résultat, 2)}')
+                result = f'Décimal: {int(num, 2)} \nComplément à deux: -{int(résultat, 2)}'
             else:
                 result = (int(num, 2))
         else:
             result = (num)
     elif b2 == 'hex':
         if b1 == 'dec':
-            return(hex(int(num))[2:])
+            result =(hex(int(num))[2:])
         elif b1 == 'oct':
             result = (hex(int(num, 8))[2:])
         elif b1 == 'bin':
@@ -178,7 +178,11 @@ def conversion():
     elif b2 == 'bin':
         if b1 == 'dec':
             if signe == True:
-                result = (f'Complément à deux (1 octet): {bin(int(num) & 0xff)[2:]} \nComplément à deux (2 octets): {bin(int(num) & 0xfff)[2:]}')
+                nb_byte = (int(num).bit_length() + 7) // 8
+                if nb_byte >=2:
+                    lettre = 's'
+                else: lettre = ''
+                result = f'Complément à deux ({nb_byte} octet{lettre}): {bin(int(num) & (2**(nb_byte*8) - 1))[2:]}'   
             else:
                 result = (bin(int(num))[2:])
         elif b1 == 'oct':
@@ -188,13 +192,13 @@ def conversion():
         else:
             result = (num)
     résultat = tk.Label(
-        text=f"Résultat: {result}",
-        height= 150,
-        width= 950,
+        text=f"Résultat: \n{result}",
+        height= 10,
+        width= 200,
         fg= '#f55142',
         font = ('',15),
-        justify= 'left' 
+        justify= 'center' 
     )
-    résultat.place(x= 40, y=400)    
+    résultat.place(x= -700, y=380)    
 if __name__ == '__main__':
     init()
