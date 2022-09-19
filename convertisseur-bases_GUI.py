@@ -1,58 +1,91 @@
-def init():
-    import re
-    import tkinter as tk
+import tkinter as tk
+import re
 
+def init():        
+    global base1, base2, nombre, result, window
+    result = ''
     window = tk.Tk()
-    window.geometry('1000x1000')
+    width = 1000
+    height = 600
     window.title('Convertisseur de bases - V1.0')
+    screenwidth = window.winfo_screenwidth()
+    screenheight = window.winfo_screenheight()
+    alignstr = '%dx%d+%d+%d' % (width, height, (screenwidth - width) / 2, (screenheight - height) / 2)
+    window.geometry(alignstr)
+    window.resizable(width=False, height=False)
 
     titre = tk.Label(
         text="Convertisseur de bases (décimal, binaire, octale et héxadécimal)",
-        height= 3,
         fg = '#f55142',
-        width= 100,
+        justify= 'center',
         font = ('',20) 
-    )
-    bouton_convertir = tk.Button(
-    text="Convertir",
-    width=10,
-    height=2,
-    bg="#f55142",
-    fg="white",
-    font  = ('', 15),
-    border = 0
     )
     base1_titre = tk.Label(
         text="Base 1",
         fg = '#f55142',
-        height= 3,
-        width= 100,
+        justify = 'center', 
         font = ('',15) 
     )
     base1 = tk.Entry(
     fg="#f55142",
     bg="white",
-    width=50
+    font= ('', 13),
+    justify = 'center',
+    borderwidth = '1px',
     )
     base2_titre = tk.Label(
         text="Base 2",
-        height= 3,
         fg= '#f55142',
-        width= 100,
+        justify= 'center',
         font = ('',15) 
     )
     base2 = tk.Entry(
     fg="#f55142",
     bg="white",
-    width=50
+    font= ('', 13),
+    justify= 'center',
+    borderwidth = '1px',
     )
-  
-    titre.pack()
-    base1_titre.pack()
-    base1.pack()
-    base2_titre.pack()
-    base2.pack()
-    bouton_convertir.place(x = 450,y = 900)
+    bouton_convertir = tk.Button(
+    text="Convertir",
+    width=10,
+    borderwidth = '3px',
+    justify= 'center',
+    height=2,
+    bg="#f55142",
+    fg="white",
+    font  = ('', 15),
+    command = conversion
+    )
+    nombre_titre = tk.Label(
+        text="Nombre:",
+        fg= '#f55142',
+        font = ('',15) 
+    )
+    nombre = tk.Entry(
+    fg="#f55142",
+    bg="white",
+    font= ('', 13),
+    justify= 'center'
+    )
+    résultat = tk.Label(
+        text=f"Résultat: {result}",
+        height= 150,
+        width = 950,
+        justify= 'left',
+        fg= '#f55142',
+        font = ('',15) 
+    )  
+    
+    titre.place(x=100,y=30,width=800,height=50)
+    base1_titre.place(x=140,y=120,width=197,height=40)
+    base1.place(x=160,y=190,width=155,height=50)
+    base2_titre.place(x=630,y=120,width=159,height=41)
+    base2.place(x=640,y=190,width=155,height=50)
+    nombre_titre.place(x=440,y=280,width=80,height=25)
+    nombre.place(x=420,y=320,width=109,height=44)
+    résultat.place(x= 40, y=400)
+    bouton_convertir.place(x=420,y=190,width=115,height=51)
     window.mainloop()
     # while True: 
     #     inp = input('\nConversion base1 base2 (hex, dec, oct, bin): ').lower()
@@ -99,54 +132,69 @@ def init():
     #     except KeyboardInterrupt:
     #         init() 
 
-def conversion(b1, b2, num, signe): 
+def conversion():
+    b1 = base1.get()
+    b2 = base2.get()
+    num = nombre.get()
+    if num[0] == '-':
+        signe = True
+    else: signe = False 
     if b2 == 'dec':
         if b1 == 'hex':
-            return (int(num, 16))
+            result = (int(num, 16))
         elif b1 == 'oct':
-            return (int(num, 8))
+            result = (int(num, 8))
         elif b1 == 'bin':
-            if len(num) == 8 or 16:
+            if len(num) == 8 or len(num) == 16:
                 résultat = ''
                 for bit in (bin(int(str(num),2)-1)[2:]):
                     if bit == '0':
                         résultat += '1'
                     else:
                         résultat += '0'
-                return f'Décimal: {int(num, 2)} \nComplément à deux: -{int(résultat, 2)}'
+                result = (f'Décimal: {int(num, 2)} \nComplément à deux: -{int(résultat, 2)}')
             else:
-                return (int(num, 2))
+                result = (int(num, 2))
         else:
-            return (num)
+            result = (num)
     elif b2 == 'hex':
         if b1 == 'dec':
             return(hex(int(num))[2:])
         elif b1 == 'oct':
-            return (hex(int(num, 8))[2:])
+            result = (hex(int(num, 8))[2:])
         elif b1 == 'bin':
-            return (hex(int(num, 2))[2:])
+            result = (hex(int(num, 2))[2:])
         else:
-            return (num)
+            result = (num)
     elif b2 == 'oct':
         if b1 == 'dec':
-            return (oct(int(num))[2:])
+            result = (oct(int(num))[2:])
         elif b1 == 'hex':
-            return (oct(int(num, 16))[2:])
+            result = (oct(int(num, 16))[2:])
         elif b1 == 'bin':
-            return (oct(int(num, 2))[2:])
+            result = (oct(int(num, 2))[2:])
         else:
-            return (num)
+            result = (num)
     elif b2 == 'bin':
         if b1 == 'dec':
             if signe == True:
-                return f'Complément à deux (1 octet): {bin(int(num) & 0xff)[2:]} \nComplément à deux (2 octets): {bin(int(num) & 0xfff)[2:]}'
+                result = (f'Complément à deux (1 octet): {bin(int(num) & 0xff)[2:]} \nComplément à deux (2 octets): {bin(int(num) & 0xfff)[2:]}')
             else:
-                return (bin(int(num))[2:])
+                result = (bin(int(num))[2:])
         elif b1 == 'oct':
-            return (bin(int(num, 8))[2:])
+            result = (bin(int(num, 8))[2:])
         elif b1 == 'hex':
-            return (bin(int(num, 16))[2:])
+            result = (bin(int(num, 16))[2:])
         else:
-            return (num)    
+            result = (num)
+    résultat = tk.Label(
+        text=f"Résultat: {result}",
+        height= 150,
+        width= 950,
+        fg= '#f55142',
+        font = ('',15),
+        justify= 'left' 
+    )
+    résultat.place(x= 40, y=400)    
 if __name__ == '__main__':
     init()

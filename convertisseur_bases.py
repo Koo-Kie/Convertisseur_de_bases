@@ -69,7 +69,8 @@ def conversion(b1, b2, num, signe):
         elif b1 == 'oct':
             return (int(num, 8))
         elif b1 == 'bin':
-            if len(num) == 8 or 16:
+            if len(num) == 8 or len(num) == 16:
+                print('good')
                 résultat = ''
                 for bit in (bin(int(str(num),2)-1)[2:]):
                     if bit == '0':
